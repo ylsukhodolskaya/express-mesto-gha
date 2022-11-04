@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
     type: String, // тип — String
     minlength: 2, // минимальная длина имени — 2 символа
     maxlength: 30, // а максимальная — 30 символов
+    required: true,
   },
   avatar: {
     type: String,
