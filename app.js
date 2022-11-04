@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import process from 'process';
+import { constants } from 'http2';
 import { userRoutes } from './routes/users.js';
 import { cardRoutes } from './routes/cards.js';
 
@@ -25,6 +26,11 @@ app.use('/', userRoutes);
 
 // Роутинг карточек
 app.use('/', cardRoutes);
+
+// Обработка нееправильного пути
+app.all('/*', (req, res) => {
+  res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Такой страницы не существует =(' });
+});
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
