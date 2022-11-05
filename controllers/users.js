@@ -46,7 +46,7 @@ export const findUserById = (req, res) => {
 // PATCH-запрос по обновлению профиля
 export const updateUserProfile = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => {
       if (user) {
         res.send(user);
@@ -66,7 +66,7 @@ export const updateUserProfile = (req, res) => {
 // PATCH-запрос по обновлению аватара профиля
 export const updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => {
       if (user) {
         res.send(user);
