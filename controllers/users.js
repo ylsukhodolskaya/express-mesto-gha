@@ -32,6 +32,25 @@ export const findUserById = (req, res, next) => {
     });
 };
 
+// GET-запрос пользователя
+export const findCurrentUser = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (user) {
+        res.send({ data: user });
+      } else {
+        throw new NotFoundError('Пользователь не найден');
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError(`Некорректные данные для пользователя. ${err.message}`));
+      } else {
+        next(err);
+      }
+    });
+};
+
 // PATCH-запрос по обновлению профиля
 export const updateUserProfile = (req, res, next) => {
   const { name, about } = req.body;

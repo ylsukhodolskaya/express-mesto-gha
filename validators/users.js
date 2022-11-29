@@ -42,8 +42,10 @@ const segmentBodyAuth = { [Segments.BODY]: schemaObjectAuth };
 const segmentBodyUser = { [Segments.BODY]: schemaObjectUser };
 const segmentBodyAvatar = { [Segments.BODY]: schemaObjectAvatarRequired };
 const segmentParamsRouteMe = { [Segments.PARAMS]: schemaObjectRouteMe };
+const segmentBodyProfile = { [Segments.BODY]: schemaObjectProfile };
 
 export const celebrateBodyAuth = celebrate(segmentBodyAuth);
 export const celebrateBodyUser = celebrate(segmentBodyUser);
 export const celebrateBodyAvatar = celebrate(segmentBodyAvatar);
 export const celebrateParamsRouteMe = celebrate(segmentParamsRouteMe);
+export const celebrateBodyProfile = celebrate(segmentBodyProfile);
