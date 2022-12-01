@@ -48,7 +48,7 @@ app.use(errors());
 
 app.use((err, req, res, next) => {
   const status = err.statusCode || constants.HTTP_STATUS_INTERNAL_SERVER_ERROR;
-  const message = err.message || 'Неизвестная ошибка';
+  const message = status === constants.HTTP_STATUS_INTERNAL_SERVER_ERROR ? 'Неизвестная ошибка' : err.message;
   res.status(status).send({ message });
   next();
 });
