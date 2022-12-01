@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-// import { constants } from 'http2';
 import { User } from '../models/user.js';
 import { ConflictError, BadRequestError, NotFoundError } from '../errors/index.js';
 

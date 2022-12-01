@@ -1,50 +1,54 @@
-import { constants } from 'http2';
+// import { constants } from 'http2';
 import { Card } from '../models/card.js';
+import { BadRequestError, NotFoundError } from '../errors/index.js';
 
 // POST-запрос для создания новой карточки
-export const createCard = (req, res) => {
+export const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные' });
+        next(new BadRequestError(`Введены некорректные данные ${err.message}`));
       } else {
-        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
+        next(err);
       }
     });
 };
 
 // GET-запрос для загрузки всех карточек
-export const findCards = (req, res) => {
+export const findCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch(() => {
-      res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка загрузки карточек с сервера' });
+    .catch((err) => {
+      // res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      // .send({ message: 'Произошла ошибка загрузки карточек с сервера' });
+      next(err);
     });
 };
 
 // DELETE-запрос на удаление карточки по id
-export const deleteCard = (req, res) => {
+export const deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.id)
     .then((card) => {
       if (card) {
         res.send(card);
       } else {
-        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Карточка не найдена' });
+        // res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Карточка не найдена' });
+        throw new NotFoundError('Карточка не найдена');
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные' });
+        next(new BadRequestError(`Введены некорректные данные ${err.message}`));
       } else {
-        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка удаления карточки с сервера' });
+        next(err);
       }
     });
 };
 
 // PUT-запрос постановки лайка
-export const likeCard = (req, res) => {
+export const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
@@ -54,20 +58,20 @@ export const likeCard = (req, res) => {
       if (card) {
         res.send(card);
       } else {
-        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Карточка не найдена' });
+        throw new NotFoundError('Карточка не найдена');
       }
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные' });
+        next(new BadRequestError(`Введены некорректные данные ${err.message}`));
       } else {
-        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
+        next(err);
       }
     });
 };
 
 // DELETE-запрос удаления лайка
-export const dislikeCard = (req, res) => {
+export const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } }, // удалить _id из массива
@@ -77,14 +81,14 @@ export const dislikeCard = (req, res) => {
       if (card) {
         res.send(card);
       } else {
-        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Карточка не найдена' });
+        throw new NotFoundError('Карточка не найдена');
       }
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные' });
+        next(new BadRequestError(`Введены некорректные данные ${err.message}`));
       } else {
-        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка на сервере' });
+        next(err);
       }
     });
 };
