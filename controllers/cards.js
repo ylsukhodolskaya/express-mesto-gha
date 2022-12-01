@@ -27,6 +27,25 @@ export const findCards = (req, res, next) => {
     });
 };
 
+// GET-запрос карточки по id
+export const findCardById = (req, res, next) => {
+  Card.findById(req.params.id)
+    .then((card) => {
+      if (card) {
+        res.send({ data: card });
+      } else {
+        throw new NotFoundError('Карточка не найдена');
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError(`Некорректные данные. ${err.message}`));
+      } else {
+        next(err);
+      }
+    });
+};
+
 // DELETE-запрос на удаление карточки по id
 export const deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.id)
@@ -58,7 +77,7 @@ export const likeCard = (req, res, next) => {
       if (card) {
         res.send(card);
       } else {
-        throw new NotFoundError('Карточка не найдена');
+        next(new NotFoundError('Карточка не найдена'));
       }
     })
     .catch((err) => {
@@ -81,7 +100,7 @@ export const dislikeCard = (req, res, next) => {
       if (card) {
         res.send(card);
       } else {
-        throw new NotFoundError('Карточка не найдена');
+        next(new NotFoundError('Карточка не найдена'));
       }
     })
     .catch((err) => {
