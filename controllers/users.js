@@ -63,7 +63,7 @@ export const updateUserProfile = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError(`Некорректные данные для пользователя. ${err.message}`));
       } else {
         next(err);
@@ -83,7 +83,7 @@ export const updateUserAvatar = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new BadRequestError(`Некорректные данные при обновлении аватара. ${err.message}`));
       } else {
         next(err);

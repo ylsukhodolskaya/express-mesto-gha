@@ -6,11 +6,7 @@ import dotenv from 'dotenv';
 import { constants } from 'http2';
 import path from 'path';
 import { errors } from 'celebrate';
-import { userRoutes } from './routes/users.js';
-import { cardRoutes } from './routes/cards.js';
-import { authRouter } from './routes/auth.js';
-import { auth } from './middlewares/auth.js';
-import { NotFoundError } from './errors/NotFoundError.js';
+import { router } from './routes/index.js';
 
 const config = dotenv.config({
   path: path
@@ -28,21 +24,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb'); // подключаемс
 app.use(bodyParser.json()); // для собирания JSON-формата
 app.use(bodyParser.urlencoded({ extended: true })); // для приёма веб-страниц внутри POST-запроса
 
-// Роутинг авторизации
-app.use('/', authRouter);
-
-app.use(auth);
-
-// Вызываем роутинг пользователя
-app.use('/users', userRoutes);
-
-// Роутинг карточек
-app.use('/cards', cardRoutes);
-
-// Обработка нееправильного пути
-app.all('/*', (req, res, next) => {
-  next(new NotFoundError('Такой страницы не существует'));
-});
+app.use(router);
 
 app.use(errors());
 

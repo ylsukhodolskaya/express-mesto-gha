@@ -18,7 +18,7 @@ export const createCard = (req, res, next) => {
 
 // GET-запрос для загрузки всех карточек
 export const findCards = (req, res, next) => {
-  Card.find({})
+  Card.find({}).populate('owner')
     .then((cards) => res.send({ data: cards }))
     .catch((err) => {
       next(err);
@@ -27,7 +27,7 @@ export const findCards = (req, res, next) => {
 
 // GET-запрос карточки по id
 export const findCardById = (req, res, next) => {
-  Card.findById(req.params.cardId)
+  Card.findById(req.params.cardId).populate('owner')
     .then((card) => {
       if (card) {
         res.send({ data: card });
@@ -46,15 +46,14 @@ export const findCardById = (req, res, next) => {
 
 // DELETE-запрос на удаление карточки по id
 export const deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId).populate('owner')
     .then((card) => {
       if (!card) {
-        next(new NotFoundError('Карточка не найдена'));
+        throw new NotFoundError('Карточка не найдена');
       } else if (card.owner.toString() !== req.user._id) {
-        next(new ForbiddenError('Доступ запрещен'));
+        throw new ForbiddenError('Доступ запрещен');
       } else {
-        card.remove();
-        res.send(card);
+        return card.remove().then(() => { res.send(card); });
       }
     })
     .catch((err) => {
@@ -72,7 +71,7 @@ export const likeCard = (req, res, next) => {
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
-  )
+  ).populate('owner')
     .then((card) => {
       if (card) {
         res.send(card);
