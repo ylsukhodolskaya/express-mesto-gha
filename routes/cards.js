@@ -13,7 +13,7 @@ export const cardRoutes = Router();
 
 cardRoutes.post('/cards', celebrateBodyCard, createCard);
 cardRoutes.get('/cards', findCards);
-cardRoutes.get('/cards/:id', findCardById);
-cardRoutes.delete('/cards/:id', celebrateParamsRouteId, deleteCard);
-cardRoutes.put('/cards/:id/likes', celebrateParamsRouteId, likeCard);
-cardRoutes.delete('/cards/:id/likes', celebrateParamsRouteId, dislikeCard);
+cardRoutes.get('/cards/:cardId', findCardById);
+cardRoutes.delete('/cards/:cardId', celebrateParamsRouteId, deleteCard);
+cardRoutes.put('/cards/:cardId/likes', celebrateParamsRouteId, likeCard);
+cardRoutes.delete('/cards/:cardId/likes', celebrateParamsRouteId, dislikeCard);

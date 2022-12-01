@@ -6,7 +6,7 @@ export const schemaName = Joi.string().min(2).max(30).required();
 export const schemaLink = Joi.string().uri({ scheme: ['http', 'https'] }).required();
 
 export const schemaObjectRouteId = Joi.object({
-  id: schemaRouteId,
+  cardId: schemaRouteId,
 }).required();
 export const schemaObjectCard = Joi.object({
   name: schemaName,

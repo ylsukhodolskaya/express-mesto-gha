@@ -1,6 +1,6 @@
 // import { constants } from 'http2';
 import { Card } from '../models/card.js';
-import { BadRequestError, NotFoundError } from '../errors/index.js';
+import { BadRequestError, NotFoundError, ForbiddenError } from '../errors/index.js';
 
 // POST-запрос для создания новой карточки
 export const createCard = (req, res, next) => {
@@ -29,7 +29,7 @@ export const findCards = (req, res, next) => {
 
 // GET-запрос карточки по id
 export const findCardById = (req, res, next) => {
-  Card.findById(req.params.id)
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (card) {
         res.send({ data: card });
@@ -48,13 +48,15 @@ export const findCardById = (req, res, next) => {
 
 // DELETE-запрос на удаление карточки по id
 export const deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.id)
+  Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
-      if (card) {
-        res.send(card);
+      if (!card) {
+        next(new NotFoundError('Карточка не найдена'));
+      } else if (card.owner.toString() !== req.user._id) {
+        next(new ForbiddenError('Доступ запрещен'));
       } else {
-        // res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Карточка не найдена' });
-        throw new NotFoundError('Карточка не найдена');
+        card.remove();
+        res.send(card);
       }
     })
     .catch((err) => {
