@@ -5,11 +5,6 @@ import {
   schemaURL,
 } from './common.js';
 
-const schemaRouteMe = Joi.alternatives().try(
-  Joi.string().equal('me'),
-  schemaObjectId,
-).required();
-
 export const schemaAvatar = schemaURL;
 export const schemaEmail = Joi.string().email().required();
 const schemaPassword = Joi.string().required();
@@ -17,8 +12,8 @@ const schemaPassword = Joi.string().required();
 const schemaName = Joi.string().min(2).max(30);
 const schemaAbout = Joi.string().min(2).max(30);
 
-const schemaObjectRouteMe = Joi.object({
-  id: schemaRouteMe,
+const schemaObjectRouteId = Joi.object({
+  id: schemaObjectId.required(),
 }).required();
 const schemaObjectProfile = Joi.object({
   name: schemaName,
@@ -41,11 +36,11 @@ const schemaObjectUser = schemaObjectAuth // объединяем несколь
 const segmentBodyAuth = { [Segments.BODY]: schemaObjectAuth };
 const segmentBodyUser = { [Segments.BODY]: schemaObjectUser };
 const segmentBodyAvatar = { [Segments.BODY]: schemaObjectAvatarRequired };
-const segmentParamsRouteMe = { [Segments.PARAMS]: schemaObjectRouteMe };
+const segmentParamsRouteId = { [Segments.PARAMS]: schemaObjectRouteId };
 const segmentBodyProfile = { [Segments.BODY]: schemaObjectProfile };
 
 export const celebrateBodyAuth = celebrate(segmentBodyAuth);
 export const celebrateBodyUser = celebrate(segmentBodyUser);
 export const celebrateBodyAvatar = celebrate(segmentBodyAvatar);
-export const celebrateParamsRouteMe = celebrate(segmentParamsRouteMe);
+export const celebrateParamsRouteId = celebrate(segmentParamsRouteId);
 export const celebrateBodyProfile = celebrate(segmentBodyProfile);

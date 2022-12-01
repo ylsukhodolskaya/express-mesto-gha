@@ -11,9 +11,9 @@ import { celebrateBodyCard, celebrateParamsRouteId } from '../validators/cards.j
 
 export const cardRoutes = Router();
 
-cardRoutes.post('/cards', celebrateBodyCard, createCard);
-cardRoutes.get('/cards', findCards);
-cardRoutes.get('/cards/:cardId', findCardById);
-cardRoutes.delete('/cards/:cardId', celebrateParamsRouteId, deleteCard);
-cardRoutes.put('/cards/:cardId/likes', celebrateParamsRouteId, likeCard);
-cardRoutes.delete('/cards/:cardId/likes', celebrateParamsRouteId, dislikeCard);
+cardRoutes.post('/', celebrateBodyCard, createCard);
+cardRoutes.get('/', findCards);
+cardRoutes.get('/:cardId', findCardById);
+cardRoutes.delete('/:cardId', celebrateParamsRouteId, deleteCard);
+cardRoutes.put('/:cardId/likes', celebrateParamsRouteId, likeCard);
+cardRoutes.delete('/:cardId/likes', celebrateParamsRouteId, dislikeCard);

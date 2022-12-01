@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { UnauthorizedError } from '../errors/index.js';
 
 export const auth = (req, res, next) => {
-  const { authorization = '' } = req.headers;
+  const { authorization } = req.headers;
   if (!authorization) {
     next(new UnauthorizedError('Требуется аутентификация'));
   } else {

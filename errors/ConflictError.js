@@ -1,7 +1,6 @@
 import { constants } from 'http2';
-import { HTTPError } from './HTTPError.js';
 
-export class ConflictError extends HTTPError {
+export class ConflictError extends Error {
   constructor(message) {
     super(message, constants.HTTP_STATUS_CONFLICT);
   }

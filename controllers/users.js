@@ -1,3 +1,4 @@
+import { constants } from 'http2';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { User } from '../models/user.js';
@@ -112,7 +113,7 @@ export const register = (req, res, next) => {
     })
     .then((document) => {
       const { password: removed, ...user } = document.toObject();
-      res.send(user);
+      res.send(user).status(constants.HTTP_STATUS_NO_CONTENT);
     })
     .catch((err) => {
       if (err.code === UniqueErrorCode) {

@@ -6,12 +6,12 @@ import {
   updateUserAvatar,
   findCurrentUser,
 } from '../controllers/users.js';
-import { celebrateParamsRouteMe, celebrateBodyProfile, celebrateBodyAvatar } from '../validators/users.js';
+import { celebrateParamsRouteId, celebrateBodyProfile, celebrateBodyAvatar } from '../validators/users.js';
 
 export const userRoutes = Router();
 
-userRoutes.get('/users', findUsers);
-userRoutes.patch('/users/me', celebrateBodyProfile, updateUserProfile);
-userRoutes.get('/users/me', findCurrentUser);
-userRoutes.patch('/users/me/avatar', celebrateBodyAvatar, updateUserAvatar);
-userRoutes.get('/users/:id', celebrateParamsRouteMe, findUserById);
+userRoutes.get('/', findUsers);
+userRoutes.patch('/me', celebrateBodyProfile, updateUserProfile);
+userRoutes.get('/me', findCurrentUser);
+userRoutes.patch('/me/avatar', celebrateBodyAvatar, updateUserAvatar);
+userRoutes.get('/:id', celebrateParamsRouteId, findUserById);

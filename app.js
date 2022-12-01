@@ -10,22 +10,8 @@ import { userRoutes } from './routes/users.js';
 import { cardRoutes } from './routes/cards.js';
 import { authRouter } from './routes/auth.js';
 import { auth } from './middlewares/auth.js';
+import { NotFoundError } from './errors/NotFoundError.js';
 
-// export const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// export const run = async (envName) => {
-//   process.on('unhandledRejection', (err) => {
-//     console.error(err);
-//     process.exit(1);
-//   });
-
-//   const config = dotenv.config({ path: path.resolve(__dirname, '.env.common') }).parsed;
-//   if (!config) {
-//     throw new Error('Config not found');
-//   }
-//   config.NODE_ENV = envName;
-// };
-// dotenv.config();
 const config = dotenv.config({
   path: path
     .resolve(process.env.NODE_ENV === 'production' ? '.env' : '.env.common'),
@@ -48,20 +34,22 @@ app.use('/', authRouter);
 app.use(auth);
 
 // Вызываем роутинг пользователя
-app.use('/', userRoutes);
+app.use('/users', userRoutes);
 
 // Роутинг карточек
-app.use('/', cardRoutes);
+app.use('/cards', cardRoutes);
 
 // Обработка нееправильного пути
-app.all('/*', (req, res) => {
-  res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Такой страницы не существует =(' });
+app.all('/*', (req, res, next) => {
+  next(new NotFoundError('Такой страницы не существует'));
 });
 
 app.use(errors());
 
 app.use((err, req, res, next) => {
-  res.status(err.statusCode || constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: err.message || 'Неизвестная ошибка' });
+  const status = err.statusCode || constants.HTTP_STATUS_INTERNAL_SERVER_ERROR;
+  const message = err.message || 'Неизвестная ошибка';
+  res.status(status).send({ message });
   next();
 });
 

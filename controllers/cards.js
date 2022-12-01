@@ -21,8 +21,6 @@ export const findCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
     .catch((err) => {
-      // res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-      // .send({ message: 'Произошла ошибка загрузки карточек с сервера' });
       next(err);
     });
 };
@@ -83,7 +81,7 @@ export const likeCard = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err.name === 'CastError') {
         next(new BadRequestError(`Введены некорректные данные ${err.message}`));
       } else {
         next(err);
@@ -106,7 +104,7 @@ export const dislikeCard = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
+      if (err.name === 'CastError') {
         next(new BadRequestError(`Введены некорректные данные ${err.message}`));
       } else {
         next(err);
