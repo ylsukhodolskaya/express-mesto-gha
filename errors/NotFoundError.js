@@ -1,8 +1,8 @@
 import { constants } from 'http2';
-import { HTTPError } from './HTTPError.js';
 
-export class NotFoundError extends HTTPError {
+export class NotFoundError extends Error {
   constructor(message) {
-    super(message, constants.HTTP_STATUS_NOT_FOUND);
+    super(message);
+    this.statusCode = constants.HTTP_STATUS_NOT_FOUND;
   }
 }

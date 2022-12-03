@@ -18,7 +18,7 @@ export const createCard = (req, res, next) => {
 
 // GET-запрос для загрузки всех карточек
 export const findCards = (req, res, next) => {
-  Card.find({}).populate('owner')
+  Card.find({}).populate('owner').populate('likes')
     .then((cards) => res.send({ data: cards }))
     .catch((err) => {
       next(err);
@@ -27,7 +27,7 @@ export const findCards = (req, res, next) => {
 
 // GET-запрос карточки по id
 export const findCardById = (req, res, next) => {
-  Card.findById(req.params.cardId).populate('owner')
+  Card.findById(req.params.cardId).populate('owner').populate('likes')
     .then((card) => {
       if (card) {
         res.send({ data: card });
@@ -46,7 +46,7 @@ export const findCardById = (req, res, next) => {
 
 // DELETE-запрос на удаление карточки по id
 export const deleteCard = (req, res, next) => {
-  Card.findById(req.params.cardId).populate('owner')
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Карточка не найдена');
@@ -71,7 +71,7 @@ export const likeCard = (req, res, next) => {
     req.params.cardId,
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
-  ).populate('owner')
+  ).populate('owner').populate('likes')
     .then((card) => {
       if (card) {
         res.send(card);

@@ -54,7 +54,7 @@ export const findCurrentUser = (req, res, next) => {
 // PATCH-запрос по обновлению профиля
 export const updateUserProfile = (req, res, next) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
     .then((user) => {
       if (user) {
         res.send(user);
@@ -74,7 +74,7 @@ export const updateUserProfile = (req, res, next) => {
 // PATCH-запрос по обновлению аватара профиля
 export const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
     .then((user) => {
       if (user) {
         res.send(user);
@@ -113,7 +113,7 @@ export const register = (req, res, next) => {
     })
     .then((document) => {
       const { password: removed, ...user } = document.toObject();
-      res.send(user).status(constants.HTTP_STATUS_NO_CONTENT);
+      res.status(constants.HTTP_STATUS_CREATED).send(user);
     })
     .catch((err) => {
       if (err.code === UniqueErrorCode) {

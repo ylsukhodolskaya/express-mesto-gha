@@ -3,7 +3,7 @@ import { UnauthorizedError } from '../errors/index.js';
 
 export const auth = (req, res, next) => {
   const { authorization } = req.headers;
-  if (!authorization) {
+  if (!authorization || !authorization.startsWith('Bearer ')) {
     next(new UnauthorizedError('Требуется аутентификация'));
   } else {
     const token = authorization.replace(/^Bearer*\s*/i, '');

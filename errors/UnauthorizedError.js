@@ -1,8 +1,8 @@
 import { constants } from 'http2';
-import { HTTPError } from './HTTPError.js';
 
-export class UnauthorizedError extends HTTPError {
+export class UnauthorizedError extends Error {
   constructor(message) {
-    super(message, constants.HTTP_STATUS_UNAUTHORIZED);
+    super(message);
+    this.statusCode = constants.HTTP_STATUS_UNAUTHORIZED;
   }
 }
