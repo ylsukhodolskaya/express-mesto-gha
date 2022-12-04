@@ -1,4 +1,3 @@
-// import { constants } from 'http2';
 import { Card } from '../models/card.js';
 import { BadRequestError, NotFoundError, ForbiddenError } from '../errors/index.js';
 

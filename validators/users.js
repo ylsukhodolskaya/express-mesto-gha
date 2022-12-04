@@ -20,6 +20,10 @@ const schemaObjectProfile = Joi.object({
   name: schemaName,
   about: schemaAbout,
 }).required();
+const schemaObjectProfileRequired = Joi.object({
+  name: schemaName.required(),
+  about: schemaAbout.required(),
+}).required();
 const schemaObjectAvatar = Joi.object({
   avatar: schemaAvatar,
 }).required();
@@ -36,12 +40,12 @@ const schemaObjectUser = schemaObjectAuth // объединяем несколь
 
 const segmentBodyAuth = { [Segments.BODY]: schemaObjectAuth };
 const segmentBodyUser = { [Segments.BODY]: schemaObjectUser };
-const segmentBodyAvatar = { [Segments.BODY]: schemaObjectAvatarRequired };
+const segmentBodyAvatarRequired = { [Segments.BODY]: schemaObjectAvatarRequired };
 const segmentParamsRouteId = { [Segments.PARAMS]: schemaObjectRouteId };
-const segmentBodyProfile = { [Segments.BODY]: schemaObjectProfile };
+const segmentBodyProfileRequired = { [Segments.BODY]: schemaObjectProfileRequired };
 
 export const celebrateBodyAuth = celebrate(segmentBodyAuth);
 export const celebrateBodyUser = celebrate(segmentBodyUser);
-export const celebrateBodyAvatar = celebrate(segmentBodyAvatar);
+export const celebrateBodyAvatarRequired = celebrate(segmentBodyAvatarRequired);
 export const celebrateParamsRouteId = celebrate(segmentParamsRouteId);
-export const celebrateBodyProfile = celebrate(segmentBodyProfile);
+export const celebrateBodyProfileRequired = celebrate(segmentBodyProfileRequired);
